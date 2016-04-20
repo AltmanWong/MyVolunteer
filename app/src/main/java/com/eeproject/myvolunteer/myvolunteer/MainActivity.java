@@ -7,6 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -22,8 +25,10 @@ import com.example.facedemo.facedemo.ChatActivity;
 import com.example.facedemo.facedemo.FaceConversionUtil;
 import com.firebase.client.Firebase;
 
+import java.io.FileNotFoundException;
 
-public class MainActivity extends Activity implements fragment_QuestList.PassValue {
+
+public class MainActivity extends Activity implements fragment_QuestListRecyclerView.PassValue {
     //Setup context
     Context context = this;
 
@@ -118,7 +123,7 @@ public class MainActivity extends Activity implements fragment_QuestList.PassVal
             getFragmentManager().beginTransaction().replace(R.id.content_container, f1).commit();
 
         }else {
-            fragment_AddQuest fragment1 = new fragment_AddQuest();
+            fragment_AddQuestMaterial fragment1 = new fragment_AddQuestMaterial();
             getFragmentManager().beginTransaction().replace(R.id.content_container, fragment1).commit();
         }
     }
@@ -129,8 +134,14 @@ public class MainActivity extends Activity implements fragment_QuestList.PassVal
     }
 
     private void changezuyoChat() {
+        if(parameter.login.get() == false){
+            Toast.makeText(context, "Please Login!", Toast.LENGTH_LONG).show();
+            login f1 = new login();
+            getFragmentManager().beginTransaction().replace(R.id.content_container, f1).commit();
+
+        }else {
         fragment_Chat  fragment1 = new fragment_Chat();
-        getFragmentManager().beginTransaction().replace(R.id.content_container, fragment1).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_container, fragment1).commit();}
     }
 
     private void changeRanking() {
@@ -185,9 +196,11 @@ public class MainActivity extends Activity implements fragment_QuestList.PassVal
     }
 
     @Override
-    public void setPosition(int position) {
+    public void setKey(positionandkey key) {
         fragment_QuestDetails fragment1 = new fragment_QuestDetails();
-        fragment1.updateInfo(position);
+        fragment1.updateInfo(key);
         getFragmentManager().beginTransaction().replace(R.id.content_container, fragment1).addToBackStack(null).commit();
     }
+
+
 }
